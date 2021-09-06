@@ -8,6 +8,7 @@ authors = ["Jorge <jorgeavilacartes@gmail.com>"]
 python = "^3.8"
 tensorflow = "^2.6.0"
 streamlit = "^0.88.0"
+complexcgr = "^0.6.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
