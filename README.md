@@ -11,8 +11,8 @@ Build a compress representation of DNA sequences using Variational Autoencoders 
 - VAEs Architectures are implemented using tensorflow v2.6. All architectures availables are in `unsupervised-dna/models/<name_architecture>.py`
   - current architectures are built using Convolutional (encoder) and Deconvolutional (decoder) layers. 
 - To add new architectures please follow the `unsupervised-dna/models/TEMPLATE.py` code.
-- Dataset to train was build with `tf.data` API [see here](https://www.tensorflow.org/guide/data)
-- Version data with [DVC](https://dvc.org/)
+- Dataset to train was built with `tf.data` API [see here](https://www.tensorflow.org/guide/data)
+- Data versioning with [DVC](https://dvc.org/)
 ___ 
 ## In progress:
 - [ ] Perturbations [transitions and transversions](https://www.biorxiv.org/content/10.1101/2021.05.13.444008v2.full.pdf)
