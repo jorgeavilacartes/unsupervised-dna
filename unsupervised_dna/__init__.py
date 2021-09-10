@@ -6,5 +6,5 @@ from .perturbation import MimicSequence
 from .monitor_values import MonitorValues
 from .fcgr import (
     GenerateFCGR, 
-    GeneratePerturbationFCGR,
+    GeneratePerturbatedFCGR,
 )

@@ -13,10 +13,11 @@ Build a compress representation of DNA sequences using Variational Autoencoders 
 - To add new architectures please follow the `unsupervised-dna/models/TEMPLATE.py` code.
 - Dataset to train was built with `tf.data` API [see here](https://www.tensorflow.org/guide/data)
 - Data versioning with [DVC](https://dvc.org/)
+- Mimic Sequences: perturbations of sequences based on [transitions and transversions](https://www.biorxiv.org/content/10.1101/2021.05.13.444008v2.full.pdf)
 ___ 
 ## In progress:
-- [ ] Perturbations [transitions and transversions](https://www.biorxiv.org/content/10.1101/2021.05.13.444008v2.full.pdf)
 - [ ] Streamlit app to visualize results `streamlit run app.py`  
 ## TO DO: 
+- [ ] problems with pytest: `import tensorflow as tf`
 - [ ] Build a [CML](https://cml.dev/) pipeline to run experiments.
 - [ ] Try with new datasets (more heterogeneous)

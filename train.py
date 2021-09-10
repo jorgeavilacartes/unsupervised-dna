@@ -16,7 +16,7 @@ EPOCHS = 30
 AUTOTUNE = tf.data.AUTOTUNE
 SEED = 42
 IMG_HEIGHT, IMG_WIDTH = 2**KMER, 2**KMER
-DATA_DIR = Path("data")
+DATA_DIR = Path("data/fcgr")
 
 ## -- Distributed training -- 
 # try:
