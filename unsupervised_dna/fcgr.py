@@ -1,3 +1,7 @@
+import logging
+logging.basicConfig(filename='data/fcgr.log',  level=logging.INFO, filemode="w")
+
+from tqdm import tqdm
 import random ; random.seed(42)
 from pathlib import Path
 from Bio import SeqIO
@@ -25,28 +29,30 @@ class GenerateFCGR:
         self.destination_folder.mkdir(exist_ok=True)
 
 
-    def from_fasta(self, path: Path):
+    def from_fasta(self, path: Path, max_seq: int = 1000):
         "FCGR for all sequences of a fasta file"
         # load fasta file
         fasta = self.load_fasta(path)
         
+        count = 0
         # for each sequence save the FCGR
-        for record in fasta:
-        
-            # get basic information
-            seq     = record.seq
-            id_seq  = record.id.replace("/","_")
-            len_seq = len(seq)
-            count_A = seq.count("A")
-            count_C = seq.count("C")
-            count_G = seq.count("G")
-            count_T = seq.count("T")
-            
-            # Generate and save FCGR for the current sequence
-            path_save = self.destination_folder.joinpath("{}-{}.jpg".format(str(self.counter).zfill(5), id_seq))
-            self.from_seq(record.seq, path_save)
-            self.mv()
-
+        for record in tqdm(fasta, desc="Generating FCGR", total=max_seq):
+            while count < max_seq:
+                # get basic information
+                seq     = record.seq
+                id_seq  = record.id.replace("/","_")
+                len_seq = len(seq)
+                count_A = seq.count("A")
+                count_C = seq.count("C")
+                count_G = seq.count("G")
+                count_T = seq.count("T")
+                
+                # Generate and save FCGR for the current sequence
+                path_save = self.destination_folder.joinpath("{}-{}.jpg".format(str(self.counter).zfill(5), id_seq))
+                self.from_seq(record.seq, path_save)
+                self.mv()
+            count += 1
+            logging.info(f'FCGR {count}/{max_seq}')
         # save metadata
         self.mv.to_csv(self.destination_folder.joinpath("fcgr-metadata.csv"))
 

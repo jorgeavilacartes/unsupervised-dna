@@ -21,3 +21,4 @@ ___
 - [ ] problems with pytest: `import tensorflow as tf`
 - [ ] Build a [CML](https://cml.dev/) pipeline to run experiments.
 - [ ] Try with new datasets (more heterogeneous)
+- [ ] Module to encapsulate dataset loading from directory. About dataset performance: ["For perfect shuffling, a buffer size greater than or equal to the full size of the dataset is required."](https://www.tensorflow.org/api_docs/python/tf/data/Dataset?hl=ko)

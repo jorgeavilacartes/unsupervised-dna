@@ -7,7 +7,7 @@ from unsupervised_dna import (
 ## -- Settings -- 
 
 # Editable
-KMER = 8
+KMER = 7
 VAL_SPLIT = 0.2
 BATCH_SIZE = 8
 EPOCHS = 30
@@ -36,6 +36,10 @@ img_loader = LoadImageVAE(IMG_HEIGHT, IMG_WIDTH)
 # load path to images in /data
 list_ds = tf.data.Dataset.list_files(str(DATA_DIR/'*.jpg'))
 
+# remove some data for local test
+image_skip = int(len(list_ds) * 0.3)
+list_ds = list_ds.skip(image_skip)
+
 # Split training and validation datasets
 image_count = len(list_ds)
 val_size = int(image_count * 0.2)
@@ -49,7 +53,7 @@ val_ds = val_ds.map(img_loader, num_parallel_calls=AUTOTUNE)
 # Performance of datasets
 def configure_for_performance(ds):
     ds = ds.cache()
-    ds = ds.shuffle(buffer_size=1000)
+    ds = ds.shuffle(buffer_size=3500)
     ds = ds.batch(BATCH_SIZE)
     ds = ds.prefetch(buffer_size=AUTOTUNE)
     return ds
