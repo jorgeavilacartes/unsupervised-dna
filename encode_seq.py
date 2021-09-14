@@ -1,4 +1,6 @@
 "Encode sequences using VAE model"
+from parameters import PARAMETERS
+
 from tqdm import tqdm
 from pathlib import Path
 import numpy as np
@@ -13,10 +15,10 @@ from unsupervised_dna import (
 mv = MonitorValues(["path_img","z_mean","z_var"])
 
 # config experiment
-KMER = 7
-DATA_DIR = Path("data/fcgr-7-mer") # image directory
-TEST_DIR = Path("test") # image directory
-TEST_DIR.mkdir(exist_ok=True)
+KMER = PARAMETERS["KMER"]
+DATA_DIR = Path(f"data/fcgr-{KMER}-mer") # image directory
+ENCODING_DIR = Path("encoding") # image directory
+ENCODING_DIR.mkdir(exist_ok=True)
 LIST_IMG = [path for path in DATA_DIR.rglob("*.jpg")] # list of images to predict
 load_img = LoadImageEncoder(2**KMER,2**KMER)
 
@@ -46,4 +48,4 @@ for path_img in tqdm(LIST_IMG, desc="Encoding", total=len(LIST_IMG)):
     z_var = z_var.numpy()[0]
     mv()
 
-mv.to_csv(TEST_DIR.joinpath("encode-seq.csv"))
+mv.to_csv(ENCODING_DIR.joinpath("encode-seq.csv"))

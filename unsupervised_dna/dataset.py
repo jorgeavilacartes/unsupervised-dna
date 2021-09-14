@@ -26,10 +26,10 @@ class DatasetVAE:
 
     def split_train_val(self, val_size):
         # Split training and validation datasets
-        image_count = len(self.list_ds)
+        image_count = len(self.ds)
         val_size = int(image_count * val_size)
-        train_ds = self.list_ds.skip(val_size)
-        val_ds = self.list_ds.take(val_size)
+        train_ds = self.ds.skip(val_size)
+        val_ds = self.ds.take(val_size)
 
         return train_ds, val_ds
 

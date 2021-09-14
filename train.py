@@ -1,22 +1,26 @@
+from tensorflow.python.ops.gen_batch_ops import batch
+from parameters import PARAMETERS
+
 from pathlib import Path
 import tensorflow as tf
 from unsupervised_dna import (
     ModelLoader,
     LoadImageVAE,
+    DatasetVAE,
 )
 ## -- Settings -- 
 
 # Editable
-KMER = 7
-VAL_SPLIT = 0.2
-BATCH_SIZE = 8
-EPOCHS = 30
+KMER = PARAMETERS["KMER"]
+VAL_SPLIT = PARAMETERS["VAL_SPLIT"]
+BATCH_SIZE = PARAMETERS["BATCH_SIZE"]
+EPOCHS = PARAMETERS["EPOCHS"]
 
 # Default
 AUTOTUNE = tf.data.AUTOTUNE
 SEED = 42
 IMG_HEIGHT, IMG_WIDTH = 2**KMER, 2**KMER
-DATA_DIR = Path("data/fcgr-7-mer")
+DATA_DIR = Path(f"data/fcgr-{KMER}-mer")
 
 ## -- Distributed training -- 
 # try:
@@ -31,40 +35,8 @@ loader = ModelLoader()
 model = loader("vae_{}mer".format(KMER))
 
 ## -- Datasets -- 
-img_loader = LoadImageVAE(IMG_HEIGHT, IMG_WIDTH)
-
-# load path to images in /data
-list_ds = tf.data.Dataset.list_files(str(DATA_DIR/'*.jpg'))
-
-# remove some data for local test
-image_skip = int(len(list_ds) * 0.3)
-list_ds = list_ds.skip(image_skip)
-
-# Split training and validation datasets
-image_count = len(list_ds)
-val_size = int(image_count * 0.2)
-train_ds = list_ds.skip(val_size)
-val_ds = list_ds.take(val_size)
-
-# Set `num_parallel_calls` so multiple images are loaded/processed in parallel.
-train_ds = train_ds.map(img_loader, num_parallel_calls=AUTOTUNE)
-val_ds = val_ds.map(img_loader, num_parallel_calls=AUTOTUNE)
-
-# Performance of datasets
-def configure_for_performance(ds):
-    ds = ds.cache()
-    ds = ds.shuffle(buffer_size=len(ds))
-    ds = ds.batch(BATCH_SIZE)
-    ds = ds.prefetch(buffer_size=AUTOTUNE)
-    return ds
-
-# Preprocessing 
-normalization_layer = tf.keras.layers.experimental.preprocessing.Rescaling(1./255)
-train_ds = train_ds.map(lambda x, y: (normalization_layer(x), normalization_layer(y)))
-val_ds = val_ds.map(lambda x, y: (normalization_layer(x), normalization_layer(y)))
-
-train_ds = configure_for_performance(train_ds)
-val_ds = configure_for_performance(val_ds)
+ds_vae = DatasetVAE(DATA_DIR, batch_size=BATCH_SIZE, kmer=KMER, shuffle=True)
+train_ds, val_ds = ds_vae(for_training=True, val_size=0.2)
 
 ## -- Callbacks --
 #checkpoint_filepath = Path('checkpoint/{epoch:02d}-{val_loss:.2f}.hdf5')
@@ -82,5 +54,8 @@ model.fit(
     train_ds,
     validation_data=val_ds,
     epochs=EPOCHS,
-    callbacks=[model_checkpoint_callback]
+    callbacks=[
+        model_checkpoint_callback,
+        tf.keras.callbacks.EarlyStopping(patience=5),
+        ]
 )
