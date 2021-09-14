@@ -31,13 +31,14 @@ class GenerateFCGR:
 
     def from_fasta(self, path: Path, max_seq: int = 1000):
         "FCGR for all sequences of a fasta file"
+        self.reset_counter()
         # load fasta file
         fasta = self.load_fasta(path)
         
-        count = 0
+        max_id = len(str(max_seq))
         # for each sequence save the FCGR
         for record in tqdm(fasta, desc="Generating FCGR", total=max_seq):
-            while count < max_seq:
+            if self.counter < max_seq:
                 # get basic information
                 seq     = record.seq
                 id_seq  = record.id.replace("/","_")
@@ -48,21 +49,27 @@ class GenerateFCGR:
                 count_T = seq.count("T")
                 
                 # Generate and save FCGR for the current sequence
-                path_save = self.destination_folder.joinpath("{}-{}.jpg".format(str(self.counter).zfill(5), id_seq))
+                path_save = self.destination_folder.joinpath("{}-{}.jpg".format(str(self.counter).zfill(max_id), id_seq))
                 self.from_seq(record.seq, path_save)
                 self.mv()
-            count += 1
-            logging.info(f'FCGR {count}/{max_seq}')
+                
+            else:
+                break
+
         # save metadata
         self.mv.to_csv(self.destination_folder.joinpath("fcgr-metadata.csv"))
-
+        
     def from_seq(self, seq: str, path_save):
         "Get FCGR from a sequence"
-        seq = self.preprocessing(seq)
-        chaos = self.fcgr(seq)
-        self.fcgr.save(chaos, path_save)
+        if not Path(path_save).is_file():
+            seq = self.preprocessing(seq)
+            chaos = self.fcgr(seq)
+            self.fcgr.save(chaos, path_save)
         self.counter +=1
 
+    def reset_counter(self,):
+        self.counter=0
+        
     @staticmethod
     def preprocessing(seq):
         seq = seq.upper()

@@ -41,17 +41,17 @@ class MimicSequence:
         mutations = []
 
         for i in index:
-            nucleotide = seq[i]
-            if nucleotide == 'A':
+            nb = seq[i]
+            if nb == 'A':
                 mutations.append('G')
-            elif nucleotide == 'G':
+            elif nb == 'G':
                 mutations.append('A')
-            elif nucleotide == 'T':
+            elif nb == 'T':
                 mutations.append('C')
-            elif nucleotide == 'C':
+            elif nb == 'C':
                 mutations.append('T')
             else: 
-                mutations.append(nucleotide)
+                mutations.append(nb)
         return index, mutations
 
     def transversion(self, seq: str):
@@ -68,21 +68,21 @@ class MimicSequence:
         mutations = []
 
         for i in index:
-            nucleotide = seq[i]
+            nb = seq[i]
             random_number = np.random.uniform()
-            if nucleotide == 'A':
+            if nb == 'A':
                 mutation = 'T' if random_number > 0.5 else 'C'
                     
-            elif nucleotide == 'G':
+            elif nb == 'G':
                 mutation = 'T' if random_number > 0.5 else 'C'
                 
-            elif nucleotide == 'T':
+            elif nb == 'T':
                 mutation = 'A' if random_number > 0.5 else 'G'
             
-            elif nucleotide == 'C':
+            elif nb == 'C':
                 mutation = 'A' if random_number > 0.5 else 'G'
             else: 
-                mutation = nucleotide
+                mutation = nb
 
             mutations.append(mutation)
 

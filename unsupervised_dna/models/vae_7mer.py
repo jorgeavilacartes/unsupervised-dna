@@ -32,7 +32,7 @@ def get_model():
     z = Sampling()((z_mean, z_log_var))
 
     encoder = tf.keras.Model(inputs=encoder_input, outputs=[z_mean, z_log_var, z], name="encoder")
-    print(encoder.summary())
+    #print(encoder.summary())
     encoder.add_loss(kl_divergence(z_mean, z_log_var))
 
     # Decoder (recreate the image)
@@ -43,7 +43,7 @@ def get_model():
     y = tf.keras.layers.Conv2DTranspose(1, 3, strides=2, activation="sigmoid", padding="same")(y)
 
     decoder = tf.keras.Model(latent_input, y)
-    print(decoder.summary())
+    #print(decoder.summary())
 
     # VAE
     z_mean, z_lg_var, z = encoder(encoder_input)

@@ -16,7 +16,7 @@ EPOCHS = 30
 AUTOTUNE = tf.data.AUTOTUNE
 SEED = 42
 IMG_HEIGHT, IMG_WIDTH = 2**KMER, 2**KMER
-DATA_DIR = Path("data/fcgr")
+DATA_DIR = Path("data/fcgr-7-mer")
 
 ## -- Distributed training -- 
 # try:
@@ -53,7 +53,7 @@ val_ds = val_ds.map(img_loader, num_parallel_calls=AUTOTUNE)
 # Performance of datasets
 def configure_for_performance(ds):
     ds = ds.cache()
-    ds = ds.shuffle(buffer_size=3500)
+    ds = ds.shuffle(buffer_size=len(ds))
     ds = ds.batch(BATCH_SIZE)
     ds = ds.prefetch(buffer_size=AUTOTUNE)
     return ds
