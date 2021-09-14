@@ -1,0 +1,5 @@
+outs:
+- md5: c8484ba2b63896715d4c59f1efd54906.dir
+  size: 18013
+  nfiles: 1
+  path: encoding
