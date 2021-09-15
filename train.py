@@ -1,4 +1,3 @@
-from tensorflow.python.ops.gen_batch_ops import batch
 from parameters import PARAMETERS
 
 from pathlib import Path
